@@ -6,7 +6,7 @@
   <title>DB Contents</title>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      fetch('http://node-backend:3000/data')  <!-- Use the container name here -->
+      fetch('http://13.51.247.195/api/data')  <!-- Use the container name here -->
         .then(response => response.json())
         .then(data => {
           const list = document.getElementById('items-list');
