@@ -2,9 +2,10 @@ const express = require('express');
 const { Pool } = require('pg');
 const client = require('prom-client');
 require('./db');
-
+const cors = require('cors');
 const app = express();
 const port = 3000;
+app.use(cors());
 
 // Metrics setup for Prometheus
 const collectDefaultMetrics = client.collectDefaultMetrics;
