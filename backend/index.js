@@ -1,6 +1,7 @@
 const express = require('express');
 const { Pool } = require('pg');
 const client = require('prom-client');
+require('./db');
 
 const app = express();
 const port = 3000;
