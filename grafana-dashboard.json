@@ -1,0 +1,17 @@
+{
+    "dashboard": {
+      "panels": [
+        {
+          "title": "Node.js Metrics",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "nodejs_memory_usage_bytes",
+              "format": "time_series"
+            }
+          ]
+        }
+      ]
+    }
+  }
+  
