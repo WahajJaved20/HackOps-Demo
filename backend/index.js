@@ -48,7 +48,7 @@ app.get('/', async (req, res) => {
 });
 
 // Endpoint to insert data into PostgreSQL
-app.post('/data', async (req, res) => {
+app.post('/putData', async (req, res) => {
   const { name } = req.body;  // Get the 'name' from the request body
 
   if (!name) {
