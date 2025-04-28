@@ -25,13 +25,11 @@ services:
       - "5432:5432"
     
   frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
+    build: ./frontend
+    container_name: frontend
+
     ports:
       - "8080:80"
-    volumes:
-      - ./frontend:/usr/share/nginx/html
     
   prometheus:
     image: prom/prometheus
