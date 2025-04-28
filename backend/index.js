@@ -42,6 +42,24 @@ app.get('/', async (req, res) => {
     res.status(500).send(err.toString());
   }
 });
+app.post('/data', async (req, res) => {
+  const { name } = req.body;  // Get the 'name' from the request body
+
+  if (!name) {
+    return res.status(400).send('Name is required');
+  }
+
+  try {
+    const result = await dbClient.query(
+      'CREATE TABLE IF NOT EXISTS items (id SERIAL PRIMARY KEY, name VARCHAR(100))'
+      'INSERT INTO items (name) VALUES ($1) RETURNING *', 
+      [name]
+    );
+    res.status(201).json(result.rows[0]);  // Respond with the inserted row
+  } catch (err) {
+    res.status(500).send(err.toString());
+  }
+});
 
 app.listen(port, () => {
   console.log(`Backend running at http://localhost:${port}`);
