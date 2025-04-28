@@ -10,6 +10,7 @@ const port = 3000;
 const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics({ timeout: 5000 });
 
+// PostgreSQL client setup
 const dbClient = new Pool({
   user: 'postgres',
   host: 'postgres',
@@ -17,6 +18,9 @@ const dbClient = new Pool({
   password: 'password',
   port: 5432,
 });
+
+// Middleware to parse JSON body
+app.use(express.json());
 
 // Endpoint to get data from PostgreSQL
 app.get('/data', async (req, res) => {
@@ -34,7 +38,7 @@ app.get('/metrics', async (req, res) => {
   res.end(await client.register.metrics());
 });
 
-// Endpoint to get data from PostgreSQL
+// Simple test endpoint
 app.get('/', async (req, res) => {
   try {
     res.json(`Hello From Your Container running on port: ${port}`);
@@ -42,6 +46,8 @@ app.get('/', async (req, res) => {
     res.status(500).send(err.toString());
   }
 });
+
+// Endpoint to insert data into PostgreSQL
 app.post('/data', async (req, res) => {
   const { name } = req.body;  // Get the 'name' from the request body
 
@@ -50,11 +56,19 @@ app.post('/data', async (req, res) => {
   }
 
   try {
+    // Create table if it doesn't exist, then insert data
+    await dbClient.query(`
+      CREATE TABLE IF NOT EXISTS items (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100)
+      );
+    `);
+
     const result = await dbClient.query(
-      `CREATE TABLE IF NOT EXISTS items (id SERIAL PRIMARY KEY, name VARCHAR(100));
-      INSERT INTO items (name) VALUES ($1) RETURNING *,
+      'INSERT INTO items (name) VALUES ($1) RETURNING *', 
       [name]
-    );`);
+    );
+
     res.status(201).json(result.rows[0]);  // Respond with the inserted row
   } catch (err) {
     res.status(500).send(err.toString());
